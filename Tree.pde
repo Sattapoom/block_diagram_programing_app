@@ -34,11 +34,8 @@ class Tree
       else if(command.equals("for")){
         fill(0,255,0);
       }
-      else if(command.equals("normal")){
+      else if(command.equals("walk")){
         fill(0,0,255);
-      }
-      else if(command.equals("end")){
-        fill(0,0,0);
       }
       else{
         fill(100,100,100);
@@ -58,36 +55,25 @@ class Tree
       root = construcFortree();
     }
     else{
-      root = construcNormaltree();
+      root = new Node(command);
     }
     
   }
-  
+  // -------------------------------------------------------
   Node construcIftree(){
     Node node = new Node("if");
     Node truechild = new Node("true");
     Node falsechild = new Node("false");
-    Node nextchild = construcNormaltree();
     node.addchild(truechild);
     node.addchild(falsechild);
-    node.addchild(nextchild);
     return node;
   }
   
   Node construcFortree(){
     Node node = new Node("for");
-    Node forchild = construcNormaltree();
-    node.addchild(forchild);
     return node;
   }
-  
-  Node construcNormaltree(){
-    Node node = new Node("normal");
-    Node normalchild = new Node("end");
-    node.addchild(normalchild);
-    return node;
-  }
-  
+  // -------------------------------------------------------
   void changeChild(Node child){
     root.changechild(child);
   }
@@ -99,10 +85,14 @@ class Tree
     root.changeAnychild(child,1);
   }
   
-  Node getTree(){
-    return root;
+  void addchild(Node child){
+    root.addchild(child);
   }
   
+  Node getRoot(){
+    return root;
+  }
+  // -------------------------------------------------------
   void draw(int w, int h,Node node){
     node.drawNode(w/2,h/10);
     ArrayList<Node> children = node.getchildren();
