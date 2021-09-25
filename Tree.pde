@@ -28,19 +28,10 @@ class Tree
     }
     
     void drawNode(int x,int y){
-      if(command.equals("if")){
-        fill(255,0,0);
-      }
-      else if(command.equals("for")){
-        fill(0,255,0);
-      }
-      else if(command.equals("walk")){
-        fill(0,0,255);
-      }
-      else{
-        fill(100,100,100);
-      }
-      circle(x, y, 50);
+      fill(0);
+      //circle(x, y, 50);
+      textSize(20);
+      text(command, x, y);
       fill(255);
     }
   }
@@ -62,8 +53,8 @@ class Tree
   // -------------------------------------------------------
   Node construcIftree(){
     Node node = new Node("if");
-    Node truechild = new Node("true");
-    Node falsechild = new Node("false");
+    Node truechild = new Node("null");
+    Node falsechild = new Node("null");
     node.addchild(truechild);
     node.addchild(falsechild);
     return node;
@@ -74,23 +65,59 @@ class Tree
     return node;
   }
   // -------------------------------------------------------
-  void changeChild(Node child){
+  void changeLastChild(Tree trees){
+    Node child = trees.getRoot();
     root.changechild(child);
   }
-  
-  void changeFirstChild(Node child){
+  void changeFirstChild(Tree trees){
+    Node child = trees.getRoot();
     root.changeAnychild(child,0);
   }
-  void changeSecoundChild(Node child){
+  void changeSecoundChild(Tree trees){
+    Node child = trees.getRoot();
     root.changeAnychild(child,1);
   }
-  
-  void addchild(Node child){
+  void addIfstatement(Tree trees,String condition){
+    Tree treeofif = new Tree(condition);
+    treeofif.addchild(trees);
+    changeFirstChild(treeofif);
+  }
+  void addElsestatement(Tree trees){
+    changeSecoundChild(trees);
+  }
+  void addchild(Tree trees){
+    Node child = trees.getRoot();
     root.addchild(child);
   }
   
   Node getRoot(){
     return root;
+  }
+  
+  ArrayList<String> getCommandlist (Node root){
+    ArrayList<String> commands = new ArrayList<String>();
+    commands.add(root.command);
+    ArrayList<Node> children = root.getchildren();
+    for(int i=0; i<children.size(); i++){
+      ArrayList<String> childcommandlist = getCommandlist(children.get(i));
+      for(int j=0; j<childcommandlist.size();j++){
+        String childcommand = childcommandlist.get(j);
+        if(root.command.equals("if")){
+          if(childcommand.equals("true")){
+            i++;
+            continue;
+          }
+          else if(childcommand.equals("false")){
+            break;
+          }
+        }
+        else if(childcommand.equals("if") || childcommand.equals("for") || childcommand.equals("null")){
+          continue;
+        }
+        commands.add(childcommand);
+      }
+    }
+    return commands;
   }
   // -------------------------------------------------------
   void draw(int w, int h,Node node){
